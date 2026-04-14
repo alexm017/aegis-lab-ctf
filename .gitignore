@@ -1,0 +1,78 @@
+# ------------------------------
+# Global OS / editor junk
+# ------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ------------------------------
+# Python / virtualenv / caches
+# ------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ------------------------------
+# Logs / runtime artifacts
+# ------------------------------
+*.log
+*.log.*
+*.pid
+*.pid.lock
+
+# ------------------------------
+# Secrets / local env files
+# ------------------------------
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.kdbx
+*.secret
+*.token
+
+# ------------------------------
+# CTFd runtime + secrets
+# ------------------------------
+CTFd/.data/
+CTFd/.ctfd_secret_key
+CTFd/.flaskenv
+CTFd/CTFd/uploads/
+CTFd/CTFd/logs/
+CTFd/.git/
+
+# ------------------------------
+# Discord bot runtime + secrets
+# ------------------------------
+Aegis_Lab_Discord_Bot/.venv/
+Aegis_Lab_Discord_Bot/__pycache__/
+Aegis_Lab_Discord_Bot/.env
+Aegis_Lab_Discord_Bot/runtime.log
+Aegis_Lab_Discord_Bot/event_meta.json
+
+# ------------------------------
+# Web challenge runtime data
+# ------------------------------
+web_challenges/logs/
+web_challenges/pids/
+web_challenges/shared_flags/
+web_challenges/**/__pycache__/
+
+# ------------------------------
+# Internal/non-project working files
+# ------------------------------
+docs/internal/
+assets/reference/tmp/

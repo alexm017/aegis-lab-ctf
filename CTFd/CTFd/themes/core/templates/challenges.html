@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <style>
+    .challenge-button {
+      position: relative;
+      border: 1px solid #3a465d !important;
+      background: rgba(16, 22, 33, 0.9) !important;
+      color: #d8e0ec !important;
+      border-radius: 2px !important;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.26);
+      transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+    }
+    .challenge-button:hover,
+    .challenge-button:focus {
+      border-color: #ffbf5e !important;
+      background: rgba(23, 31, 46, 0.94) !important;
+      transform: translateY(-1px);
+    }
+    .challenge-button.challenge-solved {
+      border-color: #5f8f74 !important;
+      background: rgba(23, 47, 34, 0.92) !important;
+      color: #dff2e6 !important;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.26), 0 0 0 1px rgba(104, 170, 131, 0.16);
+    }
+    .challenge-button.challenge-solved .challenge-inner span {
+      color: #b8e1c7;
+    }
+    .challenge-inner {
+      position: relative;
+      padding-top: 18px;
+      padding-bottom: 4px;
+    }
+    .challenge-inner p {
+      margin-bottom: 0.35rem;
+      font-size: 0.92rem;
+      letter-spacing: 0.03em;
+    }
+    .challenge-inner span {
+      color: #ffcf82;
+      font-size: 0.84rem;
+      letter-spacing: 0.06em;
+    }
+    .difficulty-badge {
+      position: absolute;
+      top: 6px;
+      right: 7px;
+      padding: 2px 8px;
+      border: 1px solid #5f6d83;
+      border-radius: 2px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.35px;
+      text-transform: uppercase;
+      background: #1a2230;
+      color: #d7deea;
+      line-height: 1.35;
+      pointer-events: none;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .category-header h3 {
+      color: #ecf1fa;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 1.08rem;
+      margin: 0;
+    }
+  </style>
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1>
+        {% trans %}Challenges{% endtrans %}
+      </h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {% include "components/errors.html" %}
+      </div>
+    </div>
+
+    <div 
+      x-data="ChallengeBoard" 
+      @load-challenges.window="loadChallenges()" 
+      @load-challenge.window="loadChallenge($event.detail)"
+    >
+      <div
+          x-ref="challengeWindow" id="challenge-window" class="modal fade" tabindex="-1" role="dialog" x-data=""
+          x-html="$store.challenge.data.view"
+      ></div>
+
+      <div x-show="!loaded">
+        <div class="min-vh-50 d-flex align-items-center">
+          <div class="text-center w-100">
+            <i class="fas fa-circle-notch fa-spin fa-3x fa-fw spinner"></i>
+          </div>
+        </div>
+      </div>
+
+      <div x-show="loaded">
+        <template x-for="(category, idx) in getCategories()" :key="idx">
+          <div class="pt-5">
+            <div class="category-header mb-3">
+              <h3 x-text="category"></h3>
+            </div>
+
+            <div class="category-challenges d-flex flex-column">
+              <div class="challenges-row row">
+                <template x-for="(c, idx) in getChallenges(category)" :key="c.id">
+                  <div class="col-sm-6 col-md-4 col-lg-3 my-3">
+                    <button
+                        class="challenge-button btn btn-dark w-100 h-100"
+                        :class="[
+                          c.solved_by_me ? 'challenge-solved' : '',
+                          ...c.tags.map((tag) => `tag-${tag.value.replace(/ /g, '-')}`),
+                        ];"
+                        :value="c.id" @click="loadChallenge(c.id)"
+                    >
+                      <div class="difficulty-badge">
+                        <i class="fas fa-gear" aria-hidden="true"></i>
+                        <span
+                          x-text="
+                            c.value <= 120 ? 'Beginner' :
+                            c.value <= 180 ? 'Easy' :
+                            c.value <= 260 ? 'Medium' :
+                            c.value <= 340 ? 'Hard' :
+                            'Insane'
+                          "
+                        ></span>
+                      </div>
+
+                      <div class="challenge-inner my-3">
+                        <p x-text="c.name"></p>
+                        <span x-text="c.value"></span>
+                      </div>
+                    </button>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ Assets.js("assets/js/challenges.js") }}
+{% endblock %}

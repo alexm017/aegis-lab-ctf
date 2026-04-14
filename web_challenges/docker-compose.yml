@@ -1,0 +1,101 @@
+services:
+  cookie_jar:
+    image: ctfd_ctfd
+    container_name: zerosec_cookie_jar
+    restart: unless-stopped
+    entrypoint: ["python3", "/srv/server.py"]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8101
+      - FLAG=flag{cookie_role_escalation}
+    volumes:
+      - ./cookie_jar:/srv:ro
+    ports:
+      - "32854:8101"
+
+  sql_rookie:
+    image: ctfd_ctfd
+    container_name: zerosec_sql_rookie
+    restart: unless-stopped
+    entrypoint: ["python3", "/srv/server.py"]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8102
+      - FLAG=flag{sqli_login_bypass}
+      - DB_PATH=/tmp/sql_rookie.db
+    volumes:
+      - ./sql_rookie:/srv:ro
+    ports:
+      - "32855:8102"
+
+  template_leak:
+    image: ctfd_ctfd
+    container_name: zerosec_template_leak
+    restart: unless-stopped
+    entrypoint: ["python3", "/srv/server.py"]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8103
+      - FLAG=flag{template_context_escape}
+    volumes:
+      - ./template_leak:/srv:ro
+    ports:
+      - "32856:8103"
+
+  ssrf_notes:
+    image: ctfd_ctfd
+    container_name: zerosec_ssrf_notes
+    restart: unless-stopped
+    entrypoint: ["python3", "/srv/server.py"]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8104
+      - FLAG=flag{ssrf_hits_internal_notes}
+    volumes:
+      - ./ssrf_notes:/srv:ro
+    ports:
+      - "32857:8104"
+
+  idor_vault:
+    image: ctfd_ctfd
+    container_name: zerosec_idor_vault
+    restart: unless-stopped
+    entrypoint: ["python3", "/srv/server.py"]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8105
+      - FLAG=flag{idor_exposes_admin_data}
+    volumes:
+      - ./idor_vault:/srv:ro
+    ports:
+      - "32858:8105"
+
+  ping_commander:
+    image: ctfd_ctfd
+    container_name: zerosec_ping_commander
+    restart: unless-stopped
+    entrypoint: ["python3", "/srv/server.py"]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8106
+      - FLAG=flag{shell_injection_on_ping}
+    volumes:
+      - ./ping_commander:/srv:ro
+      - ./shared_flags/ping_commander.txt:/flag.txt:ro
+    ports:
+      - "32859:8106"
+
+  file_viewer_v2:
+    image: ctfd_ctfd
+    container_name: zerosec_file_viewer_v2
+    restart: unless-stopped
+    entrypoint: ["python3", "/srv/server.py"]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8107
+      - FLAG=flag{path_traversal_reads_private_file}
+    volumes:
+      - ./file_viewer_v2:/srv:ro
+      - ./shared_flags/file_viewer_v2.txt:/flag.txt:ro
+    ports:
+      - "32860:8107"
