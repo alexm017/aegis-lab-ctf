@@ -76,3 +76,4 @@ web_challenges/**/__pycache__/
 # ------------------------------
 docs/internal/
 assets/reference/tmp/
+SECURITY_ASSESSMENT.md
